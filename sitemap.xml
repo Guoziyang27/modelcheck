@@ -7,6 +7,12 @@
     <loc>https://guoziyang27.github.io/modelcheck/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://guoziyang27.github.io/modelcheck/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/articles/modelcheck.html</loc>
+  </url>
+  <url>
     <loc>https://guoziyang27.github.io/modelcheck/authors.html</loc>
   </url>
   <url>
@@ -20,6 +26,9 @@
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_comp_layout.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_cond_var.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_distribution.html</loc>
