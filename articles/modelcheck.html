@@ -121,6 +121,7 @@ see <code>vignette("uncert-rep")</code> and
 <span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     ar</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gganimate.com" class="external-link">gganimate</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="http://mjskay.github.io/ggdist/reference/theme_ggdist.html" class="external-link">theme_tidybayes</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://wilkelab.org/cowplot/reference/panel_border.html" class="external-link">panel_border</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>These options help Stan run faster:</p>
@@ -177,11 +178,7 @@ observed distribution. <code><a href="../reference/mcplot.html">mcplot()</a></co
 plot for model check by default if no other options defined.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p><code><a href="../reference/mcplot.html">mcplot()</a></code> uses a lot of defaults to make a model check
 visualization when users don’t explicitly define everything. The above
@@ -189,24 +186,20 @@ lines are roughly equivalent to following:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"predictive"</span>, newdata <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_model_geom_line.html">mc_model_geom_line</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"density"</span>, alpha <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_model_geom_line.html">mc_obs_geom_line</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"density"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"sup"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"predictive"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_model_line.html">mc_model_line</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"density"</span>, alpha <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_model_line.html">mc_obs_line</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"density"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_superposition</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p><code><a href="../reference/mc_distribution.html">mc_distribution()</a></code> defines how <code>modelcheck</code>
 would draw posterior distribution, where <code>"predictive"</code> says
 to draw from posterior predictive distribution and
 <code>newdata = "obs"</code> says to use the observation dataset to
-generate. <code><a href="../reference/mc_model_geom_line.html">mc_model_geom_line()</a></code> and
-<code><a href="../reference/mc_model_geom_line.html">mc_obs_geom_line()</a></code> define the geom of model predictions and
+generate. <code>mc_model_geom_line()</code> and
+<code>mc_obs_geom_line()</code> define the geom of model predictions and
 data observations and choose a suitable geom for users based on data
-types. <code><a href="../reference/mc_comp_layout.html">mc_comp_layout()</a></code> defines the comparative layout of
+types. <code>mc_comp_layout()</code> defines the comparative layout of
 the model check, i.e. how to compare model predictions and data
 observations. The option <code>"sup"</code> is for superposition, which
 overlaps the predictions and observations in one plot.
@@ -226,11 +219,7 @@ line code:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>Then you can easily apply some uncertainty representations to model
 predictions in <code>modelcheck</code>. For example, <a href="https://mjskay.github.io/ggdist/reference/stat_lineribbon.html" class="external-link">lineribbon</a>
@@ -243,13 +232,7 @@ are shown below.</p>
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <ul>
 <li>Point + interval</li>
@@ -258,32 +241,22 @@ are shown below.</p>
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_pointinterval.html">mc_model_pointinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>You can also show different draws by <a href="https://medium.com/hci-design-at-uw/hypothetical-outcomes-plots-experiencing-the-uncertain-b9ea60d7c740" class="external-link">HOPs</a>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_model_geom_auto.html">mc_model_geom_auto</a></span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"hops"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_model_point.html">mc_model_point</a></span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"hops"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck-modelcheck_hops_1.gif"></p>
 <p>And applying HOPs to uncertainty representations…</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_pointinterval.html">mc_model_pointinterval</a></span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"hops"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck-modelcheck_hops_2.gif"></p>
 </div>
 <div class="section level2">
 <h2 id="changing-comparative-layouts">Changing comparative layouts<a class="anchor" aria-label="anchor" href="#changing-comparative-layouts"></a>
@@ -291,7 +264,7 @@ are shown below.</p>
 <p>Since model check is checking the model’s performance by comparing
 with observed data, <code>modelcheck</code> package also enables users
 to change comparative layouts for model prediction and data observations
-through function <code><a href="../reference/mc_comp_layout.html">mc_comp_layout()</a></code>. <code>modelcheck</code>
+through function <code>mc_comp_layout()</code>. <code>modelcheck</code>
 has four predefined comparative layouts: juxtaposition, superposition,
 nested juxtaposition, and explicit-encoding.</p>
 <p>Juxtaposition puts the model predictions and data observations side
@@ -301,24 +274,16 @@ distinguished well.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"jux"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_juxtaposition</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>Superposition is the default comparative layout by
 <code>modelcheck</code>. It puts the model predictions at the top of
 data observations and shows them in one plots.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"sup"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_superposition</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>When checking model conditional on a discrete variable, you might
 want the comparative layout neither to be superposition, since that
 would make data points overlapped, nor to be juxtaposition, since the
@@ -331,13 +296,9 @@ plot but does not make them overlapped.</p>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_model_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_obs_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"nestjux"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_nested</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>Explicit-encoding focuses on revealing the relationship between model
 predictions and data observations by explicitly encoding or calculating
 in visualizations. Some common examples could be residual plot, Q-Q
@@ -352,27 +313,17 @@ customized operation function.</p>
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"exp"</span>, exp_op <span class="op">=</span> <span class="st">"residual"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="st">"residual"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>Q-Q plot:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"exp"</span>, exp_op <span class="op">=</span> <span class="st">"qq"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="st">"qq"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>You can also cutomize the operation function to make the
 explicitly-encoding into any explicit comparison you want. The
 customized function should take an data frame including two columns for
@@ -390,16 +341,10 @@ columns named <code>y_axis</code> and <code>x_axis</code>
 <span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_comp_layout.html">mc_comp_layout</a></span><span class="op">(</span><span class="st">"exp"</span>, exp_op <span class="op">=</span> <span class="va">std_res_func</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_cond_var.html">mc_cond_var</a></span><span class="op">(</span>x_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Getting distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Operating distributions..."</span></span>
-<span><span class="co">#&gt; [1] "Visualizing..."</span></span>
-<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span>
-<span><span class="co">#&gt; [1] "Generating comparative layouts..."</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="va">std_res_func</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

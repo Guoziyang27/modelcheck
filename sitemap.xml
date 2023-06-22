@@ -25,10 +25,7 @@
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_color_palettes.html</loc>
   </url>
   <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_comp_layout.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_cond_var.html</loc>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_condition_on.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_distribution.html</loc>
@@ -37,10 +34,19 @@
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_gglayer.html</loc>
   </url>
   <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_layout_juxtaposition.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_auto.html</loc>
+  </url>
+  <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_ccdf.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_cdf.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_custom.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_dots.html</loc>
@@ -50,21 +56,6 @@
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_eye.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_geom_auto.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_geom_custom.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_geom_line.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_geom_point.html</loc>
-  </url>
-  <url>
-    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_geom_tile.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_gradientinterval.html</loc>
@@ -79,7 +70,13 @@
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_interval.html</loc>
   </url>
   <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_line.html</loc>
+  </url>
+  <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_lineribbon.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_point.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_pointinterval.html</loc>
@@ -89,6 +86,9 @@
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_slab.html</loc>
+  </url>
+  <url>
+    <loc>https://guoziyang27.github.io/modelcheck/reference/mc_model_tile.html</loc>
   </url>
   <url>
     <loc>https://guoziyang27.github.io/modelcheck/reference/mc_set_order.html</loc>
