@@ -58,7 +58,7 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p><code>modelcheck</code> is a visualization grammar designed for model checking. It provides users designing guidelines about model check visualizations and allows users to create a model check visualization in a concise and interpretable way. The structure of <code>modelcheck</code> grammar follows the necessary components we found in model checking. First, the model predictions or model features need to be extracted as a <strong>distribution</strong> of data from model objects, i.e. data tidying. Then <strong>uncertainty representations</strong> should be able to involved to describe the distribution of model, since the uncertainty is natural inherent inside models. The observed data must be somewhere in model checking as the necessity of the ground truth to know the model’s performance. We don’t want users to check the model with the observed data inside of their mind implicitly, so there is a need to define the observed data in model check, which deduce the need to define <strong>comparative layouts</strong> in model check visualization.</p>
+<p><code>modelcheck</code> is a visualization grammar designed to make it easy to generate informative visualizations for model checking. The <code>modelcheck</code> grammar assumes a basic workflow for creating model checks. First, the model predictions or model features need to be extracted as a <strong>distribution</strong> of data from a model object, i.e. data tidying. Then the user must specify an <strong>uncertainty representation</strong> to describe the selected distribution(s). They must also specify the presentation of the observed data. The user can choose among multiple <strong>comparative layouts</strong> to structure their comparison between observed data and model predictions.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -86,7 +86,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     ar</span></span>
 <span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html" class="external-link">brm</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsformula.html" class="external-link">bf</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">disp</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsformula.html" class="external-link">bf</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span>,</span>
 <span>  init <span class="op">=</span> <span class="st">"0"</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">mtcars</span>,</span>
 <span>  iter <span class="op">=</span> <span class="fl">6000</span>,</span>
@@ -154,7 +154,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"mu"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"mu"</span>, ndraws <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
@@ -162,11 +162,11 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"mu"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"mu"</span>, ndraws <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/mc_layout_juxtaposition.html">mc_layout_juxtaposition</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 16 rows containing missing values (`stat_slabinterval()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 19 rows containing missing values (`stat_slabinterval()`).</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 </div>

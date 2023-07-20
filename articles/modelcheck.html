@@ -71,12 +71,12 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This vignette introduces the <code>modelcheck</code> package, which
-facilitates model check visualizations (check whether the model predicts
-well compared with data observations) for Bayesian models in R. This
-vignette follows the basic workflow in model check to show how
-<code>modelcheck</code> can fulfill the requirements by minimal changes
-in code. For more detail description on geoms and comparative layouts,
-see <code>vignette("uncert-rep")</code> and
+facilitates model check visualizations (i.e., comparing observed data to
+model predictions) for Bayesian models in R. This vignette follows the
+basic workflow in model check to show how <code>modelcheck</code> can
+fulfill the requirements by minimal changes in code. For more detail
+description on geoms and comparative layouts, see
+<code>vignette("uncert-rep")</code> and
 <code>vignette("comp-layout")</code>.</p>
 </div>
 <div class="section level2">
@@ -132,19 +132,37 @@ see <code>vignette("uncert-rep")</code> and
 <div class="section level2">
 <h2 id="model">Model<a class="anchor" aria-label="anchor" href="#model"></a>
 </h2>
-<p>Let’s fit a simple model on <code><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">datasets::mtcars</a></code> with four
-predictors:</p>
+<p>Let’s fit a simple model on <code><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">datasets::mtcars</a></code> with
+default priors and four predictors:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/brms/man/get_prior.html" class="external-link">get_prior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsformula.html" class="external-link">bf</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                    prior     class coef group resp dpar nlpar lb ub</span></span>
+<span><span class="co">#&gt;                   (flat)         b                                 </span></span>
+<span><span class="co">#&gt;                   (flat)         b   am                            </span></span>
+<span><span class="co">#&gt;                   (flat)         b carb                            </span></span>
+<span><span class="co">#&gt;                   (flat)         b disp                            </span></span>
+<span><span class="co">#&gt;                   (flat)         b   vs                            </span></span>
+<span><span class="co">#&gt;  student_t(3, 19.2, 5.4) Intercept                                 </span></span>
+<span><span class="co">#&gt;     student_t(3, 0, 5.4)     sigma                             0   </span></span>
+<span><span class="co">#&gt;        source</span></span>
+<span><span class="co">#&gt;       default</span></span>
+<span><span class="co">#&gt;  (vectorized)</span></span>
+<span><span class="co">#&gt;  (vectorized)</span></span>
+<span><span class="co">#&gt;  (vectorized)</span></span>
+<span><span class="co">#&gt;  (vectorized)</span></span>
+<span><span class="co">#&gt;       default</span></span>
+<span><span class="co">#&gt;       default</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brm.html" class="external-link">brm</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/brms/man/brmsformula.html" class="external-link">bf</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span>,</span>
 <span>  init <span class="op">=</span> <span class="st">"0"</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">mtcars</span>,</span>
 <span>  iter <span class="op">=</span> <span class="fl">6000</span>,</span>
-<span>  </span>
-<span>  file <span class="op">=</span> <span class="st">"models/get-started_model.rds"</span> <span class="co"># cache model (can be removed)  </span></span>
+<span>  sample_prior <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  file <span class="op">=</span> <span class="st">"models/get-started_model.rds"</span> <span class="co"># cache model (can be removed)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The results look like this:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span></span>
 <span><span class="co">#&gt;  Family: gaussian </span></span>
 <span><span class="co">#&gt;   Links: mu = identity; sigma = identity </span></span>
@@ -155,15 +173,15 @@ predictors:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Population-Level Effects: </span></span>
 <span><span class="co">#&gt;           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS</span></span>
-<span><span class="co">#&gt; Intercept    26.38      2.96    20.59    32.28 1.00     6934     6851</span></span>
-<span><span class="co">#&gt; disp         -0.02      0.01    -0.04    -0.01 1.00     6955     7311</span></span>
-<span><span class="co">#&gt; carb         -1.27      0.39    -2.03    -0.50 1.00     9955     7907</span></span>
-<span><span class="co">#&gt; vs            1.20      1.67    -2.21     4.50 1.00     8019     6833</span></span>
-<span><span class="co">#&gt; am            4.13      1.44     1.35     7.01 1.00     7844     8236</span></span>
+<span><span class="co">#&gt; Intercept    26.36      2.98    20.52    32.22 1.00     6901     7124</span></span>
+<span><span class="co">#&gt; disp         -0.02      0.01    -0.04    -0.01 1.00     7061     8104</span></span>
+<span><span class="co">#&gt; carb         -1.26      0.39    -2.05    -0.50 1.00     8987     7811</span></span>
+<span><span class="co">#&gt; vs            1.21      1.67    -2.13     4.45 1.00     7621     8050</span></span>
+<span><span class="co">#&gt; am            4.13      1.43     1.31     6.95 1.00     7844     8398</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Family Specific Parameters: </span></span>
 <span><span class="co">#&gt;       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS</span></span>
-<span><span class="co">#&gt; sigma     2.76      0.39     2.12     3.65 1.00     7300     7549</span></span>
+<span><span class="co">#&gt; sigma     2.76      0.40     2.12     3.66 1.00     8124     7810</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS</span></span>
 <span><span class="co">#&gt; and Tail_ESS are effective sample size measures, and Rhat is the potential</span></span>
@@ -176,14 +194,24 @@ predictors:</p>
 with a density plot for posterior predictive distribution and data
 observed distribution. <code><a href="../reference/mcplot.html">mcplot()</a></code> here generates a density
 plot for model check by default if no other options defined.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><code>modelcheck</code> puts the response variable on y axis by
+default. You can flip the plot to generate a canonical posterior
+predictive check by density plot. <code>modelcheck</code> enables you to
+do this by <code>mc_gglayer</code> to add a <code>ggplot2</code> layer
+to model check.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p><code><a href="../reference/mcplot.html">mcplot()</a></code> uses a lot of defaults to make a model check
 visualization when users don’t explicitly define everything. The above
 lines are roughly equivalent to following:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_distribution.html">mc_distribution</a></span><span class="op">(</span><span class="st">"predictive"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -191,7 +219,7 @@ lines are roughly equivalent to following:</p>
 <span>  <span class="fu"><a href="../reference/mc_model_line.html">mc_obs_line</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"density"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_superposition</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p><code><a href="../reference/mc_distribution.html">mc_distribution()</a></code> defines how <code>modelcheck</code>
 would draw posterior distribution, where <code>"predictive"</code> says
 to draw from posterior predictive distribution and
@@ -216,11 +244,11 @@ effects on them. For example, we want to check the impact of
 <code>disp</code> on <code>mpg</code> in the above model. By using
 <code>modelcheck</code>, it’s pretty easy to do this by just adding one
 line code:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>Then you can easily apply some uncertainty representations to model
 predictions in <code>modelcheck</code>. For example, <a href="https://mjskay.github.io/ggdist/reference/stat_lineribbon.html" class="external-link">lineribbon</a>
 and <a href="https://mjskay.github.io/ggdist/reference/stat_pointinterval.html" class="external-link">point+interval</a>
@@ -228,30 +256,31 @@ are shown below.</p>
 <ul>
 <li>Lineribbon:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <ul>
 <li>Point + interval</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_pointinterval.html">mc_model_pointinterval</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>You can also show different draws by <a href="https://medium.com/hci-design-at-uw/hypothetical-outcomes-plots-experiencing-the-uncertain-b9ea60d7c740" class="external-link">HOPs</a>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p>You can also show different draws by animation (<a href="https://medium.com/hci-design-at-uw/hypothetical-outcomes-plots-experiencing-the-uncertain-b9ea60d7c740" class="external-link">HOPs</a>.).</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_point.html">mc_model_point</a></span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"hops"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="modelcheck-modelcheck_hops_1.gif"></p>
-<p>And applying HOPs to uncertainty representations…</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>Or you can even use HOPs and other uncertainty representations
+together.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_pointinterval.html">mc_model_pointinterval</a></span><span class="op">(</span>draw <span class="op">=</span> <span class="st">"hops"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -271,19 +300,25 @@ nested juxtaposition, and explicit-encoding.</p>
 by side. Juxtaposition is especially useful when model predictions and
 data observations are overlapped in superposition so they can not be
 distinguished well.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_model_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_obs_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_juxtaposition</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>Superposition is the default comparative layout by
 <code>modelcheck</code>. It puts the model predictions at the top of
 data observations and shows them in one plots.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_model_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_obs_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_superposition</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>When checking model conditional on a discrete variable, you might
 want the comparative layout neither to be superposition, since that
 would make data points overlapped, nor to be juxtaposition, since the
@@ -291,14 +326,14 @@ visual distance between model predictions and data observations would be
 too large to check through. At this time, nested juxtaposition would be
 a good choice, which puts model predictions and data observations in one
 plot but does not make them overlapped.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_model_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_model_eye.html">mc_obs_eye</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_nested</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_nested</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>Explicit-encoding focuses on revealing the relationship between model
 predictions and data observations by explicitly encoding or calculating
 in visualizations. Some common examples could be residual plot, Q-Q
@@ -308,22 +343,22 @@ explicitly-encoding by enabling users to pass in the operation
 <code>modelcheck</code> predefines several common explicitly-encodings
 (e.g. residual plot and Q-Q plot) but users can still pass in a
 customized operation function.</p>
-<p>Residual plot with lineribbon:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>Residual plot with uncertainty representation lineribbon:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_model_lineribbon.html">mc_model_lineribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="st">"residual"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>Q-Q plot:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/mcplot.html">mcplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="st">"qq"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>You can also cutomize the operation function to make the
 explicitly-encoding into any explicit comparison you want. The
 customized function should take an data frame including two columns for
@@ -331,7 +366,7 @@ predictions and observations as input and return a data frame with
 columns named <code>y_axis</code> and <code>x_axis</code>
 (optional).</p>
 <p>Standardized residual plot (using customized operation function):</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">std_res_func</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>y_axis <span class="op">=</span> <span class="va">prediction</span> <span class="op">-</span> <span class="va">observation</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -344,7 +379,7 @@ columns named <code>y_axis</code> and <code>x_axis</code>
 <span>  <span class="fu"><a href="../reference/mc_layout_juxtaposition.html">mc_layout_encoding</a></span><span class="op">(</span>transform <span class="op">=</span> <span class="va">std_res_func</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_condition_on.html">mc_condition_on</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/mc_gglayer.html">mc_gglayer</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="modelcheck_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p><img src="modelcheck_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
